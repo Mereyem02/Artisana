@@ -8,7 +8,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 #[ORM\Entity(repositoryClass: ArtisanRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'Cet email est déjà utilisé par un autre artisan.')]
+#[UniqueEntity(fields: ['telephone'], message: 'Ce numéro de téléphone est déjà utilisé par un autre artisan.')]
 class Artisan
 {
     #[ORM\Id]
@@ -41,7 +45,14 @@ class Artisan
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?\DateTime $updatedAt = null;
+
+    #[ORM\OneToOne(inversedBy: 'artisan', cascade: ['persist'])]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
+
+    #[ORM\Column(length: 20)]
+    private ?string $approvalStatus = 'PENDING';
 
     #[ORM\ManyToOne(inversedBy: 'artisan')]
     private ?Cooperative $cooperative = null;
@@ -165,12 +176,12 @@ class Artisan
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 
@@ -209,6 +220,30 @@ class Artisan
     public function removeCreer(Product $creer): static
     {
         $this->creer->removeElement($creer);
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getApprovalStatus(): ?string
+    {
+        return $this->approvalStatus;
+    }
+
+    public function setApprovalStatus(string $approvalStatus): static
+    {
+        $this->approvalStatus = $approvalStatus;
 
         return $this;
     }

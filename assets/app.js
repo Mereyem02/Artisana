@@ -6,5 +6,10 @@ import './stimulus_bootstrap.js';
  * which should already be in your base.html.twig.
  */
 import './styles/app.css';
+import './js/sweetalert'
+import * as Sweet from './js/sweetalert'
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+window.Sweet = Sweet
+
+console.log('This log comes from assets/app.js - welcome to AssetMapper! ');
+

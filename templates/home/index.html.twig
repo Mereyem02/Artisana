@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Artisana.ma{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="page-header">
+        <img src="{{ asset('images/logoArtisana.jpg') }}" alt="Artisana.ma" class="logo">
+        <div class="header-text">
+            <h1>Bienvenue sur Artisana.ma</h1>
+            <p>Le meilleur de l'artisanat marocain, directement chez vous.</p>
+        </div>
+    </div>
+
+    <div class="cards-container">
+        <div class="grid">
+            <div class="card home-card">
+                <i class="fas fa-users"></i>
+                <h3>Artisans</h3>
+                <p>Rencontrez nos artisans passionnés et découvrez leur savoir-faire ancestral.</p>
+                <a href="/artisan" class="btn btn-primary">Découvrir les artisans</a>
+            </div>
+            
+            <div class="card home-card">
+                <i class="fas fa-box"></i>
+                <h3>Produits</h3>
+                <p>Explorez notre catalogue de produits uniques faits à la main avec amour.</p>
+                <a href="/product" class="btn btn-primary">Voir les produits</a>
+            </div>
+            
+            <div class="card home-card">
+                <i class="fas fa-handshake"></i>
+                <h3>Coopératives</h3>
+                <p>Soutenez les initiatives locales et le commerce équitable marocain.</p>
+                <a href="/cooperative" class="btn btn-primary">Nos Coopératives</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

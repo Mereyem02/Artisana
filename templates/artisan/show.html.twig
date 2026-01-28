@@ -1,0 +1,137 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ artisan.nom }} - Artisan{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/artisan_show.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="back-container">
+        <a href="/artisan" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour aux artisans
+        </a>
+    </div>
+
+    <div class="card artisan-detail-card">
+        <div class="artisan-grid">
+            <div class="artisan-sidebar">
+                <div class="artisan-image-container">
+                    {% if artisan.photo %}
+                        <img src="{{ artisan.photo }}" alt="{{ artisan.nom }}" class="artisan-photo">
+                    {% else %}
+                        <div class="artisan-photo-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% if artisan.verified %}
+                    <div class="verified-badge">
+                        <span class="badge badge-success">
+                            <i class="fas fa-check-circle"></i> Artisan Vérifié
+                        </span>
+                    </div>
+                {% endif %}
+
+                <div class="contact-card mt-8">
+                    <h4>Contact</h4>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope contact-icon"></i>
+                        <a href="mailto:{{ artisan.email }}" class="contact-link">{{ artisan.email }}</a>
+                    </div>
+                    {% if artisan.telephone %}
+                    <div class="contact-item">
+                        <i class="fas fa-phone contact-icon"></i>
+                        <span class="contact-link">{{ artisan.telephone }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="artisan-main-info">
+                <h1 class="artisan-info-title">{{ artisan.nom }}</h1>
+                <p class="artisan-subtitle">Artisan Créateur Traditionnel</p>
+                
+                <div class="artisan-section">
+                    <h2 class="section-title"><i class="fas fa-quote-left"></i> Biographie</h2>
+                    <p class="bio-text">
+                        {{ artisan.bio }}
+                    </p>
+                </div>
+
+                {% if artisan.competences %}
+                    <div class="artisan-section">
+                        <h2 class="section-title"><i class="fas fa-magic"></i> Compétences & Savoir-faire</h2>
+                        <div class="skills-list">
+                            {% for competence in artisan.competences %}
+                                <span class="skill-badge">
+                                    {{ competence }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="artisan-section">
+                    <div class="section-title" style="display: flex; align-items: center; justify-content: space-between; gap: 1rem;">
+                        <span><i class="fas fa-store"></i> Produits de la boutique</span>
+                        {% if app.user and app.user.artisan and app.user.artisan.id == artisan.id %}
+                            <a href="{{ path('app_product_new') }}" class="btn btn-primary" data-turbo="false">
+                                <i class="fas fa-plus-circle"></i> Ajouter un produit
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    {% if products is not empty %}
+                        <div class="product-grid">
+                            {% for product in products %}
+                                <div class="card product-card">
+                                    <h3>{{ product.titre }}</h3>
+                                    <p>{{ product.prix|number_format(2, ',', ' ') }} MAD</p>
+                                    <div class="product-actions">
+                                        <a href="{{ path('app_product_show', {'id': product.id}) }}" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-eye"></i> Voir
+                                        </a>
+                                        {% if is_granted('ROLE_ADMIN') or (app.user and app.user.artisan and app.user.artisan.id == artisan.id) %}
+                                            <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="btn btn-primary btn-sm" data-turbo="false">
+                                                <i class="fas fa-edit"></i> Modifier
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="products-empty">Aucun produit n'a encore été ajouté.</p>
+                    {% endif %}
+                </div>
+
+                <div class="metadata-footer">
+                    <span class="creation-date">Inscrit le {{ artisan.createdAt|date('d/m/Y') }}</span>
+                    
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="admin-actions">
+                        <a href="{{ path('app_artisan_edit', {'id': artisan.id}) }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Modifier le profil
+                        </a>
+                        
+                        <form method="post" action="{{ path('app_artisan_delete', {'id': artisan.id}) }}" 
+                              class="js-confirm-delete inline-form"
+                              data-title="Supprimer l'artisan ?"
+                              data-text="Voulez-vous vraiment supprimer l'artisan '{{ artisan.nom }}' ? Cette action est définitive."
+                              data-confirm-button="Oui, supprimer">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ artisan.id) }}">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

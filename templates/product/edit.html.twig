@@ -1,0 +1,194 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Produit - Artisana.ma{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/product_form.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container product-form-container">
+    <div class="page-header">
+        <h1><i class="fas fa-edit"></i> Modifier le Produit</h1>
+        <p>{{ product.titre }}</p>
+    </div>
+
+    <div class="card">
+        {{ form_start(form, {'attr': {'id': 'product-form', 'class': 'js-confirm-submit', 'novalidate': 'novalidate', 'enctype': 'multipart/form-data', 'data-title': 'Confirmer la modification', 'data-text': 'Êtes-vous sûr de vouloir modifier ce produit ?', 'data-confirm-button': 'Oui, modifier'}}) }}
+            <div class="product-form-grid">
+                {% if product.media|length > 0 %}
+                <div class="form-group">
+                    <label class="form-label">Photos existantes</label>
+                    <div class="media-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px;">
+                        {% for medium in product.media %}
+                            <div class="media-item" style="border:1px solid #e5e7eb; border-radius:8px; padding:8px; text-align:center;">
+                                {% set img = medium.filename %}
+                                {% if img starts with 'http' %}
+                                    <img src="{{ img }}" alt="{{ product.titre }}" style="max-width:100%; height:100px; object-fit:cover; border-radius:6px;">
+                                {% else %}
+                                    <img src="{{ asset(img) }}" alt="{{ product.titre }}" style="max-width:100%; height:100px; object-fit:cover; border-radius:6px;">
+                                {% endif %}
+                            <div style="margin-top:8px;">
+                                <button type="submit" 
+                                        class="btn btn-sm btn-danger" 
+                                        style="width:100%;"
+                                        form="delete-media-form-{{ medium.id }}">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="form-group">
+                    {{ form_label(form.titre) }}
+                    {% set titre_attr = {'class': 'form-control'} %}
+                    {% if not form.titre.vars.valid %}{% set titre_attr = titre_attr|merge({'class': titre_attr.class ~ ' is-invalid'}) %}{% endif %}
+                    {{ form_widget(form.titre, {'attr': titre_attr}) }}
+                    {% if not form.titre.vars.valid %}<div class="error-message">{{ form_errors(form.titre) }}</div>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.description) }}
+                    {% set desc_attr = {'class': 'form-control'} %}
+                    {% if not form.description.vars.valid %}{% set desc_attr = desc_attr|merge({'class': desc_attr.class ~ ' is-invalid'}) %}{% endif %}
+                    {{ form_widget(form.description, {'attr': desc_attr}) }}
+                    {% if not form.description.vars.valid %}<div class="error-message">{{ form_errors(form.description) }}</div>{% endif %}
+                </div>
+
+                <div class="product-form-row">
+                    <div class="form-group">
+                        {{ form_label(form.prix) }}
+                        {% set prix_attr = {'class': 'form-control'} %}
+                        {% if not form.prix.vars.valid %}{% set prix_attr = prix_attr|merge({'class': prix_attr.class ~ ' is-invalid'}) %}{% endif %}
+                        {{ form_widget(form.prix, {'attr': prix_attr}) }}
+                        {% if not form.prix.vars.valid %}<div class="error-message">{{ form_errors(form.prix) }}</div>{% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.stock) }}
+                        {% set stock_attr = {'class': 'form-control'} %}
+                        {% if not form.stock.vars.valid %}{% set stock_attr = stock_attr|merge({'class': stock_attr.class ~ ' is-invalid'}) %}{% endif %}
+                        {{ form_widget(form.stock, {'attr': stock_attr}) }}
+                        {% if not form.stock.vars.valid %}<div class="error-message">{{ form_errors(form.stock) }}</div>{% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.dimensions) }}
+                    {% set dim_attr = {'class': 'form-control'} %}
+                    {% if not form.dimensions.vars.valid %}{% set dim_attr = dim_attr|merge({'class': dim_attr.class ~ ' is-invalid'}) %}{% endif %}
+                    {{ form_widget(form.dimensions, {'attr': dim_attr}) }}
+                    {% if not form.dimensions.vars.valid %}<div class="error-message-inline">{{ form_errors(form.dimensions) }}</div>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.materiaux) }}
+                    <div id="materiaux-list"
+                         data-prototype="{{ form_widget(form.materiaux.vars.prototype)|e('html_attr') }}"
+                         data-index="{{ form.materiaux|length }}">
+                        {% for materiau in form.materiaux %}
+                            <div class="materiau-item">
+                                {{ form_widget(materiau) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" class="btn btn-secondary mt-2" id="add-materiau-btn">
+                        <i class="fas fa-plus"></i> Ajouter un matériau
+                    </button>
+                    {% if not form.materiaux.vars.valid %}<div class="error-message">{{ form_errors(form.materiaux) }}</div>{% endif %}
+                </div>
+
+                {% if form.cooperative is defined %}
+                <div class="form-group">
+                    {{ form_label(form.cooperative) }}
+                    {% set coop_attr = {'class': 'form-control'} %}
+                    {% if not form.cooperative.vars.valid %}{% set coop_attr = coop_attr|merge({'class': coop_attr.class ~ ' is-invalid'}) %}{% endif %}
+                    {{ form_widget(form.cooperative, {'attr': coop_attr}) }}
+                    {% if not form.cooperative.vars.valid %}<div class="error-message">{{ form_errors(form.cooperative) }}</div>{% endif %}
+                </div>
+                {% endif %}
+
+                {% if form.artisans is defined %}
+                <div class="form-group">
+                    {{ form_label(form.artisans) }}
+                    {% set arts_attr = {'class': 'form-control'} %}
+                    {% if not form.artisans.vars.valid %}{% set arts_attr = arts_attr|merge({'class': arts_attr.class ~ ' is-invalid'}) %}{% endif %}
+                    {{ form_widget(form.artisans, {'attr': arts_attr}) }}
+                    {% if not form.artisans.vars.valid %}<div class="error-message">{{ form_errors(form.artisans) }}</div>{% endif %}
+                </div>
+                {% endif %}
+
+                <div class="product-form-checkbox-group">
+                    {{ form_widget(form.isActive) }}
+                    {{ form_label(form.isActive) }}
+                    {% if not form.isActive.vars.valid %}<div class="error-message">{{ form_errors(form.isActive) }}</div>{% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.photos) }}
+                    {% set photos_attr = {'class': 'form-control'} %}
+                    {% if not form.photos.vars.valid %}{% set photos_attr = photos_attr|merge({'class': photos_attr.class ~ ' is-invalid'}) %}{% endif %}
+                    {{ form_widget(form.photos, {'attr': photos_attr}) }}
+                    {% if not form.photos.vars.valid %}<div class="error-message">{{ form_errors(form.photos) }}</div>{% endif %}
+                </div>
+
+                <div class="product-form-actions">
+                    <a href="/product/{{ product.id }}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Mettre à jour
+                    </button>
+                    {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_ARTISAN') and app.user.artisan in product.artisans) %}
+                      <div style="display:inline-block; margin-left: .5rem;">
+                        <button type="submit" 
+                                class="btn btn-danger"
+                                form="delete-product-form-{{ product.id }}">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                      </div>
+                    {% endif %}
+                </div>
+            </div>
+        {{ form_end(form) }}
+
+        {# Formulaires de suppression (sortis du formulaire principal pour éviter l'imbrication invalide) #}
+        {% if product.media|length > 0 %}
+            {% for medium in product.media %}
+                <form id="delete-media-form-{{ medium.id }}" 
+                      method="post" 
+                      action="{{ path('app_product_media_delete', {id: medium.id}) }}"
+                      class="js-confirm-delete"
+                      data-title="Supprimer l'image ?"
+                      data-text="Voulez-vous vraiment supprimer cette image ?"
+                      data-confirm-button="Oui, supprimer"
+                      style="display: none;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_media' ~ medium.id) }}">
+                </form>
+            {% endfor %}
+        {% endif %}
+
+        {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_ARTISAN') and app.user.artisan in product.artisans) %}
+            <form id="delete-product-form-{{ product.id }}" 
+                  method="post" 
+                  action="{{ path('app_product_delete', {id: product.id}) }}"
+                  class="js-confirm-delete"
+                  data-turbo="false"
+                  data-title="Supprimer le produit ?"
+                  data-text="Voulez-vous vraiment supprimer le produit '{{ product.titre }}' ? Cette action est définitive."
+                  data-confirm-button="Oui, supprimer"
+                  style="display: none;">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+            </form>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/product_form.js') }}"></script>
+{% endblock %}

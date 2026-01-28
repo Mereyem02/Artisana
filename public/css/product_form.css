@@ -1,0 +1,88 @@
+.product-form-container {
+    max-width: 800px;
+}
+
+.product-form-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.product-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.materiau-item {
+    margin-bottom: 0.5rem;
+}
+
+.product-form-checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-input,
+.form-textarea,
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.product-form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.form-control:not(:placeholder-shown):invalid {
+    border-color: #DC2626;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.form-control.is-invalid {
+    border-color: #DC2626;
+    background-color: #FEF2F2;
+}
+
+.error-message {
+    color: #DC2626;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+.error-message ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.error-message li {
+    margin-bottom: 0.25rem;
+}
+
+.char-counter {
+    font-size: 0.875rem;
+    color: #6B7280;
+    margin-top: 0.25rem;
+}
+
+
+@media (max-width: 640px) {
+    .product-form-row {
+        grid-template-columns: 1fr;
+    }
+}

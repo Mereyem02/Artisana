@@ -1,0 +1,49 @@
+.empty-users {
+    text-align: center;
+    padding: 4rem;
+}
+
+.empty-users i {
+    font-size: 4rem;
+    color: #D1D5DB;
+    margin-bottom: 1rem;
+}
+
+.user-table-wrapper {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px var(--shadow);
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-table thead {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+}
+
+.user-table th {
+    padding: 1rem;
+    text-align: left;
+}
+
+.user-table tbody tr {
+    border-bottom: 1px solid var(--border);
+}
+
+.user-table td {
+    padding: 1rem;
+}
+
+.user-actions-cell {
+    text-align: center;
+}
+
+.user-btn-view {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}

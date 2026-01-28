@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Produits - Artisana.ma{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/product_index.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="page-header">
+        <h1><i class="fas fa-box"></i> Nos Produits</h1>
+        <p>Découvrez l'artisanat authentique du Maroc</p>
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ARTISAN') %}
+    <div class="admin-actions">
+        <a href="/product/new" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Ajouter un produit
+        </a>
+    </div>
+    {% endif %}
+
+    {% if products is empty %}
+        <div class="card empty-products">
+            <i class="fas fa-box-open"></i>
+            <h3>Aucun produit trouvé</h3>
+            <p>Ajoutez votre premier produit artisanal</p>
+        </div>
+    {% else %}
+        <div class="grid">
+            {% for product in products %}
+                <div class="card">
+                    <div class="product-image-wrapper">
+                        {% if product.media|length > 0 %}
+                            <img src="{{ asset(product.media[0].filename) }}" alt="{{ product.titre }}" class="product-main-image">
+                        {% else %}
+                            <div class="product-image-placeholder">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        {% endif %}
+                        
+                        {% if product.stock is defined %}
+                            <div class="product-status-badge">
+                                {% if product.stock > 10 %}
+                                    <span class="badge badge-success">
+                                        <i class="fas fa-check"></i> En stock
+                                    </span>
+                                {% elseif product.stock > 0 %}
+                                    <span class="badge badge-warning">
+                                        <i class="fas fa-exclamation"></i> Stock limité
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-danger">
+                                        <i class="fas fa-times"></i> Rupture
+                                    </span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h3 class="product-name">{{ product.titre }}</h3>
+                    
+                    <p class="product-description">
+                        {{ product.description|slice(0, 100) }}{% if product.description|length > 100 %}...{% endif %}
+                    </p>
+                    
+                    {% if product.prix is defined %}
+                        <div class="product-price-card">
+                            <div class="product-price">
+                                {{ product.prix|number_format(2, '.', ' ') }} DH
+                            </div>
+                            {% if product.prixPromo is defined and product.prixPromo %}
+                                <div class="product-promo-price">
+                                    {{ product.prixPromo|number_format(2, '.', ' ') }} DH
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="product-item-actions">
+                        <a href="/product/{{ product.id }}" class="btn btn-secondary">
+                            <i class="fas fa-eye"></i> Voir
+                        </a>
+                        {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_ARTISAN') and app.user.artisan in product.artisans) %}
+                        <a href="/product/{{ product.id }}/edit" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                        <form method="post"
+                            action="{{ path('app_product_delete', {id: product.id}) }}"
+                              class="js-confirm-delete inline-form"
+                            data-turbo="false"
+                              data-title="Supprimer le produit ?"
+                              data-text="Voulez-vous vraiment supprimer le produit '{{ product.titre }}' ? Cette action est définitive."
+                              data-confirm-button="Oui, supprimer"
+                              style="display:inline-block; margin-left: .5rem;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Supprimer
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="navigation text-center mt-4">
+            {{ knp_pagination_render(products) }}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

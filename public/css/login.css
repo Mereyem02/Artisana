@@ -1,0 +1,75 @@
+.login-wrapper {
+    max-width: 500px;
+    margin: 4rem auto;
+}
+
+.login-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+    text-align: center;
+    color: var(--primary-dark);
+    margin-bottom: 2rem;
+}
+
+.login-error {
+    background: #FEE2E2;
+    color: #991B1B;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.login-field {
+    margin-bottom: 1.5rem;
+}
+
+.login-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.login-field input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #F9FAFB;
+}
+
+.login-field input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background-color: white;
+    box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.1);
+}
+
+.login-button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.125rem;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: #6B7280;
+}
+
+.login-link a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}

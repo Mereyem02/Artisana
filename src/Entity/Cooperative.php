@@ -7,8 +7,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: CooperativeRepository::class)]
+#[UniqueEntity(
+    fields: ['email'],
+    message: 'Cet email est déjà utilisé par une autre coopérative.'
+)]
+#[UniqueEntity(
+    fields: ['telephone'],
+    message: 'Ce numéro de téléphone est déjà utilisé par une autre coopérative.'
+)]
+#[UniqueEntity(
+    fields: ['siteWeb'],
+    message: 'Ce site web est déjà utilisé par une autre coopérative.',
+    ignoreNull: true
+)]
 class Cooperative
 {
     #[ORM\Id]
@@ -25,10 +39,10 @@ class Cooperative
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $logo = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $contact = null;
 
     #[ORM\Column(length: 255)]
@@ -40,11 +54,24 @@ class Cooperative
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $siteWeb = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $ville = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $region = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $user = null;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?\DateTime $updatedAt = null;
 
     /**
      * @var Collection<int, Artisan>
@@ -172,6 +199,54 @@ class Cooperative
         return $this;
     }
 
+    public function getSiteWeb(): ?string
+    {
+        return $this->siteWeb;
+    }
+
+    public function setSiteWeb(?string $siteWeb): static
+    {
+        $this->siteWeb = $siteWeb;
+
+        return $this;
+    }
+
+    public function getVille(): ?string
+    {
+        return $this->ville;
+    }
+
+    public function setVille(?string $ville): static
+    {
+        $this->ville = $ville;
+
+        return $this;
+    }
+
+    public function getRegion(): ?string
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?string $region): static
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -184,12 +259,12 @@ class Cooperative
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 
@@ -247,7 +322,6 @@ class Cooperative
     public function removePossede(Product $possede): static
     {
         if ($this->possede->removeElement($possede)) {
-            // set the owning side to null (unless already changed)
             if ($possede->getCooperative() === $this) {
                 $possede->setCooperative(null);
             }

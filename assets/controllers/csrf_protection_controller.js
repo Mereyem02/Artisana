@@ -77,5 +77,4 @@ export function removeCsrfToken (formElement) {
     }
 }
 
-/* stimulusFetch: 'lazy' */
 export default 'csrf-protection-controller';

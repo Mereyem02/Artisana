@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail média - Artisana.ma{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/product_media.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="card media-card">
+        <h1>Média #{{ media.id }}</h1>
+        <img src="{{ media.url }}" alt="Product Media Detail">
+    </div>
+</div>
+
+{% endblock %}

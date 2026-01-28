@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ product.titre }} - Produit{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/product_show.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container" id="product-page" data-max-stock="{{ product.stock ?? '' }}">
+    <div class="back-container">
+        <a href="/product" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour aux produits
+        </a>
+    </div>
+
+    <div class="card product-detail-card">
+        <div class="product-show-grid">
+            <div>
+                <div class="product-gallery-main">
+                    {% if product.media|length > 0 %}
+                        {% set firstImage = product.media[0].filename %}
+                        {% if firstImage starts with 'http' %}
+                            <img src="{{ firstImage }}" alt="{{ product.titre }}">
+                        {% else %}
+                            <img src="{{ asset(firstImage) }}" alt="{{ product.titre }}">
+                        {% endif %}
+                    {% else %}
+                        <div class="placeholder">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                    {% if product.media|length > 1 %}
+                    <div class="product-gallery-thumbs">
+                        {% for medium in product.media|slice(1, 4) %}
+                            {% set thumbImage = medium.filename %}
+                            {% if thumbImage starts with 'http' %}
+                                <img src="{{ thumbImage }}" alt="{{ product.titre }}" class="thumb-img" data-image-src="{{ thumbImage }}">
+                            {% else %}
+                                <img src="{{ asset(thumbImage) }}" alt="{{ product.titre }}" class="thumb-img" data-image-src="{{ asset(thumbImage) }}">
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div>
+                <h1 class="product-title">{{ product.titre }}</h1>
+                
+                {% if product.stock is defined %}
+                    <div class="product-status">
+                        {% if product.stock > 10 %}
+                            <span class="badge badge-success">
+                                <i class="fas fa-check-circle"></i> En stock ({{ product.stock }} unités)
+                            </span>
+                        {% elseif product.stock > 0 %}
+                            <span class="badge badge-warning">
+                                <i class="fas fa-exclamation-triangle"></i> Stock limité ({{ product.stock }} unités)
+                            </span>
+                        {% else %}
+                            <span class="badge badge-danger">
+                                <i class="fas fa-times-circle"></i> Rupture de stock
+                            </span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                
+                {% if product.prix is defined %}
+                    <div class="product-price-section">
+                        <div class="product-price-value">
+                            {{ product.prix|number_format(2, '.', ' ') }} DH
+                        </div>
+                       
+                    </div>
+                {% endif %}
+                
+                <div class="product-description-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-align-left"></i> Description
+                    </h3>
+                    <p class="description-text">{{ product.description }}</p>
+                </div>
+                
+                {% if product.categorie is defined %}
+                    <div class="product-category-section">
+                        <h3 class="section-title">
+                            <i class="fas fa-tags"></i> Catégorie
+                        </h3>
+                        <span class="badge badge-warning category-badge">{{ product.categorie }}</span>
+                    </div>
+                {% endif %}
+                
+                {% if app.user and product.stock > 0 %}
+                    <div class="add-to-cart-section">
+                        <form method="post" 
+                              action="{{ path('app_cart_add', {id: product.id}) }}"
+                              data-controller="cart"
+                              data-action="submit->cart#addToCart">
+                            <div class="quantity-selector quantity-inline">
+                                <label for="quantity" class="quantity-label">Quantité:</label>
+                                <div class="quantity-box">
+                                    <button type="button" class="quantity-btn" data-quantity-action="dec">-</button>
+                                    <input type="number" 
+                                           id="quantity" 
+                                           name="quantity" 
+                                           value="1" 
+                                           min="1" 
+                                           max="{{ product.stock }}" 
+                                           class="quantity-input">
+                                    <button type="button" class="quantity-btn" data-quantity-action="inc">+</button>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-add-cart">
+                                <i class="fas fa-shopping-cart"></i> Ajouter au panier
+                            </button>
+                        </form>
+                    </div>
+                {% elseif not app.user %}
+                    <div class="login-alert">
+                        <p class="login-alert-text"><i class="fas fa-info-circle"></i> <a class="login-alert-link" href="{{ path('app_login') }}">Connectez-vous</a> pour ajouter ce produit au panier</p>
+                    </div>
+                {% endif %}
+                </div>
+                
+                {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_ARTISAN') and app.user.artisan in product.artisans) %}
+                <div class="admin-product-actions">
+                    <a href="/product/{{ product.id }}/edit" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i> Modifier
+                    </a>
+                      <form method="post" action="{{ path('app_product_delete', {id: product.id}) }}" 
+                          class="js-confirm-delete inline-form"
+                          data-turbo="false"
+                          data-title="Supprimer le produit ?"
+                          data-text="Voulez-vous vraiment supprimer le produit '{{ product.titre }}' ? Cette action est définitive."
+                          data-confirm-button="Oui, supprimer">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+ </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/product_show.js') }}"></script>
+{% endblock %}

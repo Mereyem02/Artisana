@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un Artisan - Artisana.ma{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/artisan_form.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div style="margin-bottom: 2rem;">
+        <a href="/artisan" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+
+    <div class="card form-container-card">
+        <h1 class="form-title">
+            <i class="fas fa-plus-circle"></i> Ajouter un nouvel Artisan
+        </h1>
+
+        {{ form_start(form, {'attr': {'id': 'artisan-admin-form', 'class': 'js-confirm-submit', 'novalidate': 'novalidate', 'data-title': 'Confirmer la création', 'data-text': 'Êtes-vous sûr de vouloir créer cet artisan ?', 'data-confirm-button': 'Oui, créer'}}) }}
+            {{ form_errors(form) }}
+            <div class="form-grid">
+                <div class="form-group">
+                    {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {% set nom_attr = {'class': 'form-control'} %}
+                    {% if not form.nom.vars.valid %}{% set nom_attr = nom_attr|merge({'class': nom_attr.class ~ ' is-invalid'}) %}{% endif %}
+                    {{ form_widget(form.nom, {'attr': nom_attr}) }}
+                    {% if not form.nom.vars.valid %}<div class="error-message">{{ form_errors(form.nom) }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.email, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {% set email_attr = {'class': 'form-control'} %}
+                    {% if not form.email.vars.valid %}{% set email_attr = email_attr|merge({'class': email_attr.class ~ ' is-invalid'}) %}{% endif %}
+                    {{ form_widget(form.email, {'attr': email_attr}) }}
+                    {% if not form.email.vars.valid %}<div class="error-message">{{ form_errors(form.email) }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    {{ form_label(form.telephone, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {% set tel_attr = {'class': 'form-control'} %}
+                    {% if not form.telephone.vars.valid %}{% set tel_attr = tel_attr|merge({'class': tel_attr.class ~ ' is-invalid'}) %}{% endif %}
+                    {{ form_widget(form.telephone, {'attr': tel_attr}) }}
+                    {% if not form.telephone.vars.valid %}<div class="error-message">{{ form_errors(form.telephone) }}</div>{% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(form.competences, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {% set comp_attr = {'class': 'form-control'} %}
+                    {% if not form.competences.vars.valid %}{% set comp_attr = comp_attr|merge({'class': comp_attr.class ~ ' is-invalid'}) %}{% endif %}
+                    {{ form_widget(form.competences, {'attr': comp_attr}) }}
+                    {% if not form.competences.vars.valid %}<div class="error-message">{{ form_errors(form.competences) }}</div>{% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.bio, null, {'label_attr': {'class': 'form-label'}}) }}
+                {% set bio_attr = {'class': 'form-control'} %}
+                {% if not form.bio.vars.valid %}{% set bio_attr = bio_attr|merge({'class': bio_attr.class ~ ' is-invalid'}) %}{% endif %}
+                {{ form_widget(form.bio, {'attr': bio_attr}) }}
+                {% if not form.bio.vars.valid %}<div class="error-message">{{ form_errors(form.bio) }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.photo, null, {'label_attr': {'class': 'form-label'}}) }}
+                {% set photo_attr = {'class': 'form-control'} %}
+                {% if not form.photo.vars.valid %}{% set photo_attr = photo_attr|merge({'class': photo_attr.class ~ ' is-invalid'}) %}{% endif %}
+                {{ form_widget(form.photo, {'attr': photo_attr}) }}
+                {% if not form.photo.vars.valid %}<div class="error-message">{{ form_errors(form.photo) }}</div>{% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(form.approvalStatus, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.approvalStatus) }}
+                <div class="error-message">{{ form_errors(form.approvalStatus) }}</div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-large btn-submit">
+                    <i class="fas fa-check"></i> Enregistrer l'Artisan
+                </button>
+                <button type="reset" class="btn btn-secondary btn-large btn-reset">
+                    Réinitialiser
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/artisan_admin_form.js') }}"></script>
+{% endblock %}

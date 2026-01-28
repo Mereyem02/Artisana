@@ -1,0 +1,110 @@
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+
+.page-header .logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 2px solid white;
+    transition: transform 0.3s ease;
+    background-color: transparent;
+}
+
+.page-header .logo:hover {
+    transform: rotate(-3deg) scale(1.05);
+    box-shadow: none;
+}
+
+.header-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.2rem;
+    font-weight: 700;
+}
+
+.header-text p {
+    font-size: 0.95rem;
+    color: #4B5563;
+    max-width: 420px;
+}
+
+.cards-container {
+    padding-bottom: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.25rem;
+}
+
+.home-card {
+    text-align: center;
+    padding: 1.5rem 1.25rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.home-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+}
+
+.home-card i {
+    font-size: 2rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.home-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+}
+
+.home-card p {
+    font-size: 0.95rem;
+    color: #6B7280;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+.home-card .btn {
+    width: 100%;
+    padding: 0.8rem;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.25rem;
+    }
+
+    .page-header .logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .header-text h1 {
+        font-size: 1.5rem;
+    }
+}

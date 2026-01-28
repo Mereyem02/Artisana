@@ -16,6 +16,35 @@ class ArtisanRepository extends ServiceEntityRepository
         parent::__construct($registry, Artisan::class);
     }
 
+       public function findDuplicateByEmail(string $email, ?int $excludeId = null): ?Artisan
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->where('a.email = :email')
+            ->setParameter('email', $email);
+        
+        if ($excludeId) {
+            $qb->andWhere('a.id != :id')
+               ->setParameter('id', $excludeId);
+        }
+        
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+   
+    public function findDuplicateByTelephone(string $telephone, ?int $excludeId = null): ?Artisan
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->where('a.telephone = :telephone')
+            ->setParameter('telephone', $telephone);
+        
+        if ($excludeId) {
+            $qb->andWhere('a.id != :id')
+               ->setParameter('id', $excludeId);
+        }
+        
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return Artisan[] Returns an array of Artisan objects
     //     */

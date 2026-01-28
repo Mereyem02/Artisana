@@ -1,0 +1,237 @@
+.artisan-detail-card {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 3rem;
+}
+
+.artisan-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+.artisan-sidebar {
+    position: sticky;
+    top: 2rem;
+}
+
+.artisan-image-container {
+    text-align: center;
+    position: relative;
+    padding: 10px;
+    background: white;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    margin-bottom: 2rem;
+}
+
+.artisan-photo {
+    width: 100%;
+    border-radius: 12px;
+    display: block;
+}
+
+.artisan-photo-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8rem;
+    color: white;
+}
+
+.verified-badge {
+    margin-top: 1.5rem;
+    display: block;
+}
+
+.verified-badge span {
+    font-size: 1.1rem;
+    padding: 0.6rem 1.25rem;
+    border-radius: 50px;
+}
+
+.artisan-main-info {
+    flex: 1;
+}
+
+.artisan-info-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-dark);
+    font-size: 3.5rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.artisan-subtitle {
+    font-size: 1.25rem;
+    color: #6B7280;
+    margin-bottom: 2.5rem;
+}
+
+.artisan-section {
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    color: var(--dark);
+    margin-bottom: 1.25rem;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.section-title i {
+    color: var(--primary);
+}
+
+.bio-text {
+    line-height: 1.8;
+    color: #4B5563;
+    font-size: 1.1rem;
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.skill-badge {
+    font-size: 1rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    background: rgba(var(--primary-rgb, 19, 78, 74), 0.05);
+    color: var(--primary-dark);
+    border: 1px solid rgba(var(--primary-rgb), 0.1);
+    font-weight: 500;
+}
+
+.contact-card {
+    background: #F8FAFC;
+    padding: 2rem;
+    border-radius: 16px;
+    border: 1px solid #E2E8F0;
+}
+
+.contact-card h4 {
+    margin-bottom: 1.5rem;
+    color: var(--dark);
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.contact-icon {
+    color: var(--primary);
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+}
+
+.contact-link {
+    color: #1E293B;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.contact-link:hover {
+    color: var(--primary);
+}
+
+.metadata-footer {
+    border-top: 1px solid #E2E8F0;
+    padding-top: 2rem;
+    margin-top: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.creation-date {
+    font-size: 0.95rem;
+    color: #94A3B8;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+@media (max-width: 900px) {
+    .artisan-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .artisan-sidebar {
+        position: static;
+    }
+
+    .artisan-image-container {
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+/* Product Grid Styles */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+}
+
+.product-card {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.product-card h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: #1F2937;
+}
+
+.product-card p {
+    margin: 0;
+    color: #6B7280;
+}
+
+.product-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.25rem;
+}
+
+.products-empty {
+    color: #6B7280;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 640px) {
+    .artisan-detail-card {
+        padding: 1.5rem;
+    }
+
+    .artisan-info-title {
+        font-size: 2.5rem;
+    }
+}

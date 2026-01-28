@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Statut de ma demande artisan - Artisana.ma{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/artisan_status.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container status-container">
+    <div class="status-card">
+        <div class="status-header">
+            {% if artisan.approvalStatus == 'PENDING' %}
+                <div class="status-icon status-pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h1 class="status-title">Demande en cours d'examen</h1>
+                <p class="status-message">
+                    Votre demande pour devenir artisan a été soumise avec succès. 
+                    Un administrateur l'examinera bientôt.
+                </p>
+            {% elseif artisan.approvalStatus == 'APPROVED' %}
+                <div class="status-icon status-approved">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h1 class="status-title">Demande approuvée !</h1>
+                <p class="status-message">
+                    Félicitations ! Votre profil artisan a été approuvé. 
+                    Vous pouvez maintenant ajouter vos produits.
+                </p>
+            {% elseif artisan.approvalStatus == 'REJECTED' %}
+                <div class="status-icon status-rejected">
+                    <i class="fas fa-times-circle"></i>
+                </div>
+                <h1 class="status-title">Demande rejetée</h1>
+                <p class="status-message">
+                    Malheureusement, votre demande a été rejetée. 
+                    Veuillez contacter un administrateur pour plus d'informations.
+                </p>
+            {% endif %}
+        </div>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Nom de la boutique / Marque</div>
+                <div class="info-value">{{ artisan.nom }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Email</div>
+                <div class="info-value">{{ artisan.email }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Téléphone</div>
+                <div class="info-value">{{ artisan.telephone }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Compétences</div>
+                <div class="info-value">
+                    {% if artisan.competences %}
+                        {{ artisan.competences|join(', ') }}
+                    {% else %}
+                        Non renseigné
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Date de soumission</div>
+                <div class="info-value">{{ artisan.createdAt|date('d/m/Y à H:i') }}</div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-label">Statut</div>
+                <div class="info-value">
+                    {% if artisan.approvalStatus == 'PENDING' %}
+                        <span class="badge badge-warning">En attente</span>
+                    {% elseif artisan.approvalStatus == 'APPROVED' %}
+                        <span class="badge badge-success">Approuvé</span>
+                    {% elseif artisan.approvalStatus == 'REJECTED' %}
+                        <span class="badge badge-danger">Rejeté</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="{{ path('app_home') }}" class="btn btn-secondary">
+                <i class="fas fa-home"></i> Retour à l'accueil
+            </a>
+            {% if artisan.approvalStatus == 'APPROVED' %}
+                <a href="{{ path('app_artisan_show', {id: artisan.id}) }}" class="btn btn-primary">
+                    <i class="fas fa-user"></i> Voir mon profil
+                </a>
+                <a href="{{ path('app_product_new') }}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Ajouter un produit
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

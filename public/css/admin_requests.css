@@ -1,0 +1,74 @@
+.requests-container {
+    margin-top: 3rem;
+}
+
+.empty-requests {
+    text-align: center;
+    padding: 3rem;
+}
+
+.empty-requests p {
+    color: #6B7280;
+    font-size: 1.2rem;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+.requests-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.requests-table thead tr {
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+}
+
+.requests-table th {
+    padding: 1rem;
+}
+
+.requests-table tbody tr.main-row {
+    border-bottom: 1px solid var(--border);
+}
+
+.requests-table td {
+    padding: 1rem;
+}
+
+.artisan-name-cell {
+    font-weight: 600;
+}
+
+.actions-cell {
+    text-align: right;
+}
+
+.btn-approve {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.8rem;
+    background: #059669;
+}
+
+.btn-reject {
+    font-size: 0.9rem;
+    padding: 0.3rem 0.8rem;
+}
+
+.cooperative-badge {
+    display: inline-block;
+    margin-top: 0.25rem;
+    padding: 0.15rem 0.6rem;
+    font-size: 0.75rem;
+    background-color: #e0f2fe;
+    color: #0369a1;
+    border-radius: 9999px;
+}
+
+.details-row td {
+    padding: 0 1rem 1rem 1rem;
+    color: #6B7280;
+    font-size: 0.9rem;
+}

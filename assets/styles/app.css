@@ -1,3 +1,7 @@
 body {
-    background-color: skyblue;
+    background-color: rgb(240, 244, 246);
+}
+
+.turbo-progress-bar {
+    background: #fff;
 }

@@ -7,8 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
+#[UniqueEntity(fields: ['slug'], message: 'Un produit avec ce slug existe déjà. Veuillez modifier le titre.')]
 class Product
 {
     #[ORM\Id]
@@ -28,8 +30,7 @@ class Product
     #[ORM\Column]
     private ?int $stock = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $sku = null;
+
 
     #[ORM\Column(length: 255)]
     private ?string $dimensions = null;
@@ -47,7 +48,7 @@ class Product
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?\DateTime $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'possede')]
     private ?Cooperative $cooperative = null;
@@ -58,19 +59,17 @@ class Product
     #[ORM\ManyToMany(targetEntity: Artisan::class, mappedBy: 'creer')]
     private Collection $artisans;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    private ?ProductMedia $a = null;
-
     /**
-     * @var Collection<int, Review>
+     * @var Collection<int, ProductMedia>
      */
-    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'product')]
-    private Collection $recoit;
+    #[ORM\OneToMany(targetEntity: ProductMedia::class, mappedBy: 'product', cascade: ['persist', 'remove'])]
+    private Collection $media;
 
+   
     public function __construct()
     {
         $this->artisans = new ArrayCollection();
-        $this->recoit = new ArrayCollection();
+        $this->media = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -78,7 +77,7 @@ class Product
         return $this->id;
     }
 
-    public function setId(string $id): static
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -129,18 +128,6 @@ class Product
     public function setStock(int $stock): static
     {
         $this->stock = $stock;
-
-        return $this;
-    }
-
-    public function getSku(): ?string
-    {
-        return $this->sku;
-    }
-
-    public function setSku(string $sku): static
-    {
-        $this->sku = $sku;
 
         return $this;
     }
@@ -205,12 +192,12 @@ class Product
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(\DateTime $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
 
@@ -256,45 +243,34 @@ class Product
         return $this;
     }
 
-    public function getA(): ?ProductMedia
-    {
-        return $this->a;
-    }
-
-    public function setA(?ProductMedia $a): static
-    {
-        $this->a = $a;
-
-        return $this;
-    }
-
     /**
-     * @return Collection<int, Review>
+     * @return Collection<int, ProductMedia>
      */
-    public function getRecoit(): Collection
+    public function getMedia(): Collection
     {
-        return $this->recoit;
+        return $this->media;
     }
 
-    public function addRecoit(Review $recoit): static
+    public function addMedium(ProductMedia $medium): static
     {
-        if (!$this->recoit->contains($recoit)) {
-            $this->recoit->add($recoit);
-            $recoit->setProduct($this);
+        if (!$this->media->contains($medium)) {
+            $this->media->add($medium);
+            $medium->setProduct($this);
         }
 
         return $this;
     }
 
-    public function removeRecoit(Review $recoit): static
+    public function removeMedium(ProductMedia $medium): static
     {
-        if ($this->recoit->removeElement($recoit)) {
+        if ($this->media->removeElement($medium)) {
             // set the owning side to null (unless already changed)
-            if ($recoit->getProduct() === $this) {
-                $recoit->setProduct(null);
+            if ($medium->getProduct() === $this) {
+                $medium->setProduct(null);
             }
         }
 
         return $this;
     }
+  
 }

@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ cooperative.nom }} - Coopérative{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/cooperative_show.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="back-container">
+        <a href="/cooperative" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour aux coopératives
+        </a>
+    </div>
+
+    <div class="card cooperative-detail-card">
+        <div class="cooperative-header">
+            <div class="coop-logo-container-large">
+                {% if cooperative.logo %}
+                    <img src="{{ asset(cooperative.logo) }}" alt="Logo {{ cooperative.nom }}" class="coop-logo-img">
+                {% else %}
+                    <i class="fas fa-handshake"></i>
+                {% endif %}
+            </div>
+        </div>
+        
+        <h1 class="cooperative-title">{{ cooperative.nom }}</h1>
+        
+        <div class="cooperative-section">
+            <h3 class="section-title">
+                <i class="fas fa-info-circle"></i> Description
+            </h3>
+            <p class="description-text">
+                {{ cooperative.description ?? 'Aucune description disponible' }}
+            </p>
+        </div>
+        
+        <div class="contact-info-grid">
+            <div class="contact-item">
+                <p class="contact-item-label">Ville</p>
+                <p class="contact-item-value">
+                    <i class="fas fa-map-marker-alt"></i>
+                    {{ cooperative.ville ?? 'Non renseignée' }}
+                </p>
+            </div>
+            <div class="contact-item">
+                <p class="contact-item-label">Région</p>
+                <p class="contact-item-value">
+                    <i class="fas fa-globe"></i>
+                    {{ cooperative.region ?? 'Non renseignée' }}
+                </p>
+            </div>
+            <div class="contact-item">
+                <p class="contact-item-label">Email</p>
+                <p class="contact-item-value">
+                    <i class="fas fa-envelope"></i>
+                    <a href="mailto:{{ cooperative.email }}" class="contact-link">
+                        {{ cooperative.email ?? 'Non renseigné' }}
+                    </a>
+                </p>
+            </div>
+            <div class="contact-item">
+                <p class="contact-item-label">Téléphone</p>
+                <p class="contact-item-value">
+                    <i class="fas fa-phone"></i>
+                    <a href="tel:{{ cooperative.telephone }}" class="contact-link">
+                        {{ cooperative.telephone ?? 'Non renseigné' }}
+                    </a>
+                </p>
+            </div>
+            {% if cooperative.siteWeb %}
+            <div class="contact-item">
+                <p class="contact-item-label">Site Web</p>
+                <p class="contact-item-value">
+                    <i class="fas fa-external-link-alt"></i>
+                    <a href="{{ cooperative.siteWeb }}" target="_blank" class="contact-link">
+                        Visiter le site
+                    </a>
+                </p>
+            </div>
+            {% endif %}
+        </div>
+        
+        {% if cooperative.artisans is defined and cooperative.artisans|length > 0 %}
+            <div class="cooperative-section">
+                <h3 class="section-title">
+                    <i class="fas fa-users"></i> Artisans membres ({{ cooperative.artisans|length }})
+                </h3>
+                <div class="members-grid">
+                    {% for artisan in cooperative.artisans %}
+                        <a href="/artisan/{{ artisan.id }}" class="no-decoration">
+                            <div class="member-card">
+                                <div class="member-name">{{ artisan.nom }}</div>
+                                <div class="member-skill">{{ artisan.competences[0] ?? 'Artisan' }}</div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+        
+        <div class="metadata-footer">
+            <p><strong>Créée le:</strong> {{ cooperative.createdAt|date('d/m/Y à H:i') }}</p>
+            <p><strong>Mis à jour le:</strong> {{ cooperative.updatedAt|date('d/m/Y à H:i') }}</p>
+        </div>
+        
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="admin-actions">
+            <a href="/cooperative/{{ cooperative.id }}/edit" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Modifier
+            </a>
+            <form method="post" action="/cooperative/{{ cooperative.id }}/delete" 
+                  class="js-confirm-delete inline-form"
+                  data-title="Supprimer la coopérative ?"
+                  data-text="Voulez-vous vraiment supprimer la coopérative '{{ cooperative.nom }}' ? Cette action est définitive."
+                  data-confirm-button="Oui, supprimer">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ cooperative.id) }}">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Supprimer
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - Artisana.ma{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="login-wrapper">
+        <div class="card login-card">
+            <h1 class="login-title">
+                <i class="fas fa-lock"></i> Connexion
+            </h1>
+
+            <form method="post" data-turbo="false">
+                {% if error %}
+                    <div class="login-error">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                <div class="login-field">
+                    <label for="inputEmail">Email</label>
+                    <input type="email"
+                           value="{{ last_username }}"
+                           name="_username"
+                           id="inputEmail"
+                           autocomplete="email"
+                           required autofocus>
+                </div>
+
+                <div class="login-field">
+                    <label for="inputPassword">Mot de passe</label>
+                    <input type="password"
+                           name="_password"
+                           id="inputPassword"
+                           autocomplete="current-password"
+                           required>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <button class="btn btn-primary login-button" type="submit">
+                    Se connecter
+                </button>
+            </form>
+
+            <div class="login-link">
+                Pas de compte ? <a href="/register">Inscrivez-vous</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

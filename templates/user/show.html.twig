@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de {{ user.lastName|default('Utilisateur') }} - Artisana.ma{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/user_show.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    {% if is_granted('ROLE_ADMIN') %}
+    <div class="back-container">
+        <a href="/user" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour aux utilisateurs
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="card user-profile-card">
+        <div class="user-profile-grid">
+            <div class="user-profile-avatar-column">
+                <div class="user-profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                
+                <div class="user-profile-badges">
+                    {% set roles = user.roles ?? ['ROLE_USER'] %}
+                    {% if 'ROLE_ADMIN' in roles %}
+                        <span class="badge badge-danger">Admin</span>
+                    {% elseif 'ROLE_ARTISAN' in roles %}
+                        <span class="badge badge-warning">Artisan</span>
+                    {% else %}
+                        <span class="badge badge-success">Client</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="user-profile-content">
+                <h1 class="user-profile-name">
+                    {{ user.firstName }} {{ user.lastName }}
+                </h1>
+                
+                <div class="user-info-section">
+                    <h3><i class="fas fa-info-circle"></i> Informations personnelles</h3>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Téléphone:</strong> {{ user.phone ?? 'Non renseigné' }}</p>
+                    <p><strong>Membre depuis:</strong> {{ user.createdAt|date('d/m/Y') }}</p>
+                </div>
+
+                <div class="user-show-actions">
+                    <a href="/user/{{ user.id }}/edit" class="btn btn-primary user-btn-edit">
+                        <i class="fas fa-edit"></i> Modifier le profil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

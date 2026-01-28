@@ -1,0 +1,134 @@
+.form-container-card {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-title {
+    color: var(--primary-dark);
+    margin-bottom: 2rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.form-input,
+.form-textarea,
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+
+
+
+.form-checkbox-group {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.form-checkbox-label {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+}
+
+.btn-large {
+    padding: 1rem;
+}
+
+.btn-submit {
+    flex: 2;
+}
+
+.btn-reset {
+    flex: 1;
+}
+
+.current-photo-container {
+    margin-top: 1rem;
+}
+
+.current-photo-label {
+    font-size: 0.9rem;
+    color: #6B7280;
+    margin-bottom: 0.5rem;
+}
+
+.current-photo-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.form-full-width {
+    width: 100%;
+}
+
+.form-control.is-invalid {
+    border-color: #DC2626;
+    background-color: #FEF2F2;
+}
+
+.error-message {
+    color: #DC2626;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+.error-message ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.error-message li {
+    margin-bottom: 0.25rem;
+}
+
+@media (max-width: 640px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}

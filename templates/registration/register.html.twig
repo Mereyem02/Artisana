@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription - Artisana.ma{% endblock %}
+
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('css/register.css') }}">
+{% endblock %}
+
+
+{% block body %}
+<div class="container auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h1><i class="fas fa-user-plus"></i> Inscription</h1>
+            <p>Rejoignez la communauté Artisana.ma</p>
+        </div>
+
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                {% set flashClass = type == 'error' ? 'flash-error' : (type == 'success' ? 'flash-success' : 'flash-info') %}
+                <div class="alert alert-{{ type == 'error' ? 'danger' : type }} flash-message {{ flashClass }}">
+                    <i class="fas fa-{{ type == 'success' ? 'check-circle' : 'exclamation-circle' }}"></i> {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        {{ form_start(registrationForm, {'attr': {'class': 'auth-form', 'data-turbo': 'false', 'novalidate': 'novalidate', 'data-controller': 'registration', 'data-action': 'submit->registration#validateForm'}}) }}
+            
+            {% if not registrationForm.vars.valid and registrationForm.vars.submitted %}
+                <div class="error-summary">
+                    <h4><i class="fas fa-exclamation-circle"></i> Veuillez corriger les erreurs suivantes :</h4>
+                    {{ form_errors(registrationForm) }}
+                </div>
+            {% endif %}
+            
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(registrationForm.firstName) }}
+                    {{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control' ~ (registrationForm.firstName.vars.errors|length > 0 ? ' is-invalid' : (registrationForm.vars.submitted ? ' is-valid' : '')), 'data-registration-target': 'firstName'}}) }}
+                    {% if registrationForm.firstName.vars.errors|length > 0 %}
+                        <span class="form-error"><i class="fas fa-exclamation-circle"></i> {{ form_errors(registrationForm.firstName) }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(registrationForm.lastName) }}
+                    {{ form_widget(registrationForm.lastName, {'attr': {'class': 'form-control' ~ (registrationForm.lastName.vars.errors|length > 0 ? ' is-invalid' : (registrationForm.vars.submitted ? ' is-valid' : '')), 'data-registration-target': 'lastName'}}) }}
+                    {% if registrationForm.lastName.vars.errors|length > 0 %}
+                        <span class="form-error"><i class="fas fa-exclamation-circle"></i> {{ form_errors(registrationForm.lastName) }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.phone) }}
+                {{ form_widget(registrationForm.phone, {'attr': {'class': 'form-control' ~ (registrationForm.phone.vars.errors|length > 0 ? ' is-invalid' : (registrationForm.vars.submitted ? ' is-valid' : '')), 'data-registration-target': 'phone'}}) }}
+                {% if registrationForm.phone.vars.errors|length > 0 %}
+                    <span class="form-error"><i class="fas fa-exclamation-circle"></i> {{ form_errors(registrationForm.phone) }}</span>
+                {% else %}
+                    <span class="form-help">Format: 0612345678 ou +212612345678</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(registrationForm.email) }}
+                {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control' ~ (registrationForm.email.vars.errors|length > 0 ? ' is-invalid' : (registrationForm.vars.submitted ? ' is-valid' : '')), 'data-registration-target': 'email'}}) }}
+                {% if registrationForm.email.vars.errors|length > 0 %}
+                    <span class="form-error"><i class="fas fa-exclamation-circle"></i> {{ form_errors(registrationForm.email) }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(registrationForm.password.first) }}
+                    {{ form_widget(registrationForm.password.first, {'attr': {'class': 'form-control' ~ (registrationForm.password.first.vars.errors|length > 0 ? ' is-invalid' : ''), 'data-registration-target': 'password'}}) }}
+                    {% if registrationForm.password.first.vars.errors|length > 0 %}
+                        <span class="form-error"><i class="fas fa-exclamation-circle"></i> {{ form_errors(registrationForm.password.first) }}</span>
+                    {% endif %}
+                    {% if registrationForm.password.vars.errors|length > 0 %}
+                        <span class="form-error"><i class="fas fa-exclamation-circle"></i> {{ form_errors(registrationForm.password) }}</span>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form_label(registrationForm.password.second) }}
+                    {{ form_widget(registrationForm.password.second, {'attr': {'class': 'form-control' ~ (registrationForm.password.second.vars.errors|length > 0 ? ' is-invalid' : ''), 'data-registration-target': 'passwordConfirm'}}) }}
+                    {% if registrationForm.password.second.vars.errors|length > 0 %}
+                        <span class="form-error"><i class="fas fa-exclamation-circle"></i> {{ form_errors(registrationForm.password.second) }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="password-requirements">
+                <strong><i class="fas fa-info-circle"></i> Exigences du mot de passe :</strong>
+                <ul>
+                    <li>Minimum 8 caractères</li>
+                    <li>Au moins une lettre majuscule (A-Z)</li>
+                    <li>Au moins une lettre minuscule (a-z)</li>
+                    <li>Au moins un chiffre (0-9)</li>
+                </ul>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-auth">
+                <i class="fas fa-check-circle"></i> Créer mon compte
+            </button>
+
+        {{ form_end(registrationForm) }}
+
+        <div class="login-link">
+            Déjà inscrit ? <a href="{{ path('app_login') }}">Connectez-vous ici</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

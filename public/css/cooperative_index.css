@@ -1,0 +1,102 @@
+.admin-actions {
+    text-align: right;
+    margin-bottom: 2rem;
+}
+
+.empty-cooperatives {
+    text-align: center;
+    padding: 4rem;
+}
+
+.empty-cooperatives i {
+    font-size: 4rem;
+    color: #D1D5DB;
+    margin-bottom: 1rem;
+}
+
+.empty-cooperatives p {
+    color: #6B7280;
+    margin-top: 0.5rem;
+}
+
+.cooperative-card-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.coop-logo-container {
+    width: 120px !important;
+    height: 120px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, var(--secondary), #047857);
+    margin: 0 auto 1rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: white;
+    box-shadow: 0 4px 12px var(--shadow);
+    overflow: hidden !important;
+    position: relative;
+    border: 3px solid white;
+}
+
+.coop-logo-img {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: cover !important;
+    display: block !important;
+    max-width: none !important;
+    max-height: none !important;
+}
+
+.logo-img-thumb {
+    display: none;
+}
+
+.cooperative-name {
+    text-align: center;
+    margin-bottom: 0.2rem;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.cooperative-description {
+    color: #6B7280;
+    margin-bottom: 1rem;
+    text-align: center;
+    min-height: 45px;
+    font-size: 0.85rem;
+}
+
+.cooperative-info-card {
+    background: var(--light);
+    padding: 0.6rem;
+    border-radius: 8px;
+    margin-bottom: 0.6rem;
+}
+
+.cooperative-info-card p {
+    font-size: 0.9rem;
+    color: #6B7280;
+    margin-bottom: 0.5rem;
+}
+
+.cooperative-info-card i {
+    color: var(--primary);
+    width: 20px;
+}
+
+.cooperative-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.cooperative-actions .btn {
+    flex: 1;
+    text-align: center;
+}

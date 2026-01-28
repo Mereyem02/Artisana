@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le profil - Artisana.ma{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="back-container">
+        <a href="/user/{{ user.id }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour au profil
+        </a>
+    </div>
+
+    <div class="card" style="padding: 1.5rem;">
+        <h1 style="margin-bottom: 1rem;">Modifier le profil</h1>
+        {{ form_start(form, {'attr': {'class': 'js-confirm-submit'}}) }}
+            {{ form_row(form.firstName) }}
+            {{ form_row(form.lastName) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.phone) }}
+            <div style="margin-top: 1rem;">
+                {{ form_row(form.save) }}
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+
+{% endblock %}

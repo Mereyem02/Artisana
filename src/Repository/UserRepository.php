@@ -16,6 +16,36 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+
+    public function findDuplicateByEmail(string $email, ?int $excludeId = null): ?User
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.email = :email')
+            ->setParameter('email', $email);
+        
+        if ($excludeId) {
+            $qb->andWhere('u.id != :id')
+               ->setParameter('id', $excludeId);
+        }
+        
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+   
+    public function findDuplicateByPhone(string $phone, ?int $excludeId = null): ?User
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.phone = :phone')
+            ->setParameter('phone', $phone);
+        
+        if ($excludeId) {
+            $qb->andWhere('u.id != :id')
+               ->setParameter('id', $excludeId);
+        }
+        
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */

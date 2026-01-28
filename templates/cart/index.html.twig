@@ -1,0 +1,188 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Panier - Artisana.ma{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/cart.css') }}">
+{% endblock %}
+
+{% block body %}
+<div id="cart-page"
+    class="container"
+    data-update-url-template="{{ path('app_cart_update', {id: '__ID__'}) }}"
+    data-remove-url-template="{{ path('app_cart_remove', {id: '__ID__'}) }}">
+    <div class="page-header">
+        <h1><i class="fas fa-shopping-cart"></i> Mon Panier</h1>
+        <p>Finalisez votre commande de produits artisanaux</p>
+    </div>
+
+    {% if errors is not empty %}
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>
+                <strong>Attention !</strong>
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if items is empty %}
+        <div class="card empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <h2>Votre panier est vide</h2>
+            <p>Découvrez nos magnifiques produits artisanaux</p>
+            <a href="{{ path('app_product') }}" class="btn btn-primary">
+                <i class="fas fa-box"></i> Voir les produits
+            </a>
+        </div>
+    {% else %}
+        <div class="cart-layout">
+            <!-- Cart Items -->
+            <div class="cart-items-section">
+                {% for item in items %}
+                    <div class="cart-item card" data-cart-item="{{ item.product.id }}">
+                        <!-- Product Image -->
+                        <div class="cart-item-image">
+                            {% if item.product.media|length > 0 %}
+                                {% set img = item.product.media|first.filename %}
+                                {% if img starts with 'http' %}
+                                    <img src="{{ img }}" alt="{{ item.product.titre }}">
+                                {% else %}
+                                    <img src="{{ asset(img) }}" alt="{{ item.product.titre }}">
+                                {% endif %}
+                            {% else %}
+                                <div class="image-placeholder">
+                                    <i class="fas fa-image"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="cart-item-info">
+                            <h3>
+                                <a href="{{ path('app_product_show', {id: item.product.id}) }}">
+                                    {{ item.product.titre }}
+                                </a>
+                            </h3>
+                            <p class="cart-item-price">{{ item.product.prix|number_format(2, ',', ' ') }} DH</p>
+                            <p class="cart-item-stock">
+                                <i class="fas fa-box"></i> Stock: {{ item.product.stock }}
+                            </p>
+                        </div>
+
+                        <div class="cart-item-quantity">
+                            <label>Quantité</label>
+                            <div class="quantity-controls">
+                                <button type="button" 
+                                    class="quantity-btn"
+                                    onclick="updateQuantity({{ item.product.id }}, {{ item.quantity - 1 }})">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" 
+                                       value="{{ item.quantity }}" 
+                                       min="1" 
+                                       max="{{ item.product.stock }}"
+                                       readonly>
+                                <button type="button" 
+                                    class="quantity-btn"
+                                    onclick="updateQuantity({{ item.product.id }}, {{ item.quantity + 1 }})">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="cart-item-subtotal">
+                            <label>Sous-total</label>
+                            <p class="subtotal-amount">{{ item.subtotal|number_format(2, ',', ' ') }} DH</p>
+                        </div>
+
+                        <form method="post" action="{{ path('app_cart_remove', {id: item.product.id}) }}" class="cart-item-remove">
+                            <input type="hidden" name="_token" value="{{ csrf_token('remove' ~ item.product.id) }}">
+                            <button type="submit" 
+                                    class="btn-remove"
+                                    onclick="return confirm('Retirer cet article du panier ?')"
+                                    title="Retirer">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+
+                <div class="cart-actions">
+                    <form method="post" 
+                          action="{{ path('app_cart_clear') }}" 
+                          id="clear-cart-form"
+                          style="display: inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('clear_cart') }}">
+                        <button type="submit" 
+                                class="btn btn-secondary">
+                            <i class="fas fa-trash"></i> Vider le panier
+                        </button>
+                    </form>
+                    <a href="{{ path('app_product') }}" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Continuer mes achats
+                    </a>
+                </div>
+            </div>
+
+            <div class="cart-summary">
+                <div class="card summary-card">
+                    <h2><i class="fas fa-receipt"></i> Résumé de la commande</h2>
+                    
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <span>Articles ({{ itemCount }})</span>
+                            <span>{{ total|number_format(2, ',', ' ') }} DH</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Livraison</span>
+                            <span class="text-muted">À calculer</span>
+                        </div>
+                    </div>
+
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <span class="total-amount">{{ total|number_format(2, ',', ' ') }} DH</span>
+                    </div>
+
+                    {% if errors is empty %}
+                        <button class="btn btn-primary btn-block btn-checkout">
+                            <i class="fas fa-credit-card"></i> Procéder au paiement
+                        </button>
+                    {% else %}
+                        <button class="btn btn-disabled btn-block" disabled>
+                            <i class="fas fa-lock"></i> Procéder au paiement
+                        </button>
+                        <p class="error-message">
+                            <i class="fas fa-exclamation-circle"></i> Veuillez corriger les erreurs
+                        </p>
+                    {% endif %}
+
+                    <div class="trust-badges">
+                        <div class="trust-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Paiement sécurisé</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="fas fa-certificate"></i>
+                            <span>Produits authentiques</span>
+                        </div>
+                        <div class="trust-item">
+                            <i class="fas fa-headset"></i>
+                            <span>Support 7j/7</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/cart.js') }}"></script>
+    <script src="{{ asset('js/cart_clear.js') }}"></script>
+{% endblock %}

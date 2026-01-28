@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demandes d'Artisans - Admin{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/admin_requests.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container requests-container">
+    <div class="page-header">
+        <h1><i class="fas fa-tasks"></i> Demandes d'Artisans</h1>
+        <p>Gérez les demandes d'inscription des artisans</p>
+    </div>
+
+    {% if artisans is empty %}
+        <div class="card empty-requests">
+            <p>Aucune demande en attente.</p>
+        </div>
+    {% else %}
+        <div class="card table-wrapper">
+            <table class="requests-table">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Date</th>
+                        <th class="actions-cell">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for artisan in artisans %}
+                        <tr class="main-row">
+                            <td class="artisan-name-cell">
+                                {{ artisan.nom }}
+                                {% if artisan.cooperative %}
+                                    <br>
+                                    <span class="badge badge-info cooperative-badge">
+                                        <i class="fas fa-handshake"></i> {{ artisan.cooperative.nom }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>{{ artisan.email }}</td>
+                            <td>{{ artisan.telephone }}</td>
+                            <td>{{ artisan.createdAt|date('d/m/Y H:i') }}</td>
+                            <td class="actions-cell">
+                                <a href="{{ path('admin_request_approve', {'id': artisan.id}) }}" 
+                                   class="btn btn-primary btn-approve js-confirm"
+                                   data-title="Approuver l'artisan ?"
+                                   data-text="L'artisan pourra alors accéder à sa boutique."
+                                   data-icon="question"
+                                   data-confirm-text="Oui, approuver">
+                                    <i class="fas fa-check"></i> Accepter
+                                </a>
+                                <a href="{{ path('admin_request_reject', {'id': artisan.id}) }}" 
+                                   class="btn btn-danger btn-reject js-confirm"
+                                   data-title="Refuser la demande ?"
+                                   data-text="Cette action informera l'artisan du refus."
+                                   data-icon="warning"
+                                   data-confirm-text="Oui, refuser">
+                                    <i class="fas fa-times"></i> Refuser
+                                </a>
+                            </td>
+                        </tr>
+                        <tr class="details-row">
+                            <td colspan="5">
+                                <strong>Bio:</strong> {{ artisan.bio }} <br>
+                                <strong>Compétences:</strong> {{ artisan.competences|join(', ') }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

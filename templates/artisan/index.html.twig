@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Artisans - Artisana.ma{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/artisan_index.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="page-header">
+        <h1><i class="fas fa-users"></i> Nos Artisans</h1>
+        <p>Découvrez les artisans talentueux du Maroc</p>
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+    <div class="admin-header-actions">
+        <a href="/artisan/new" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Ajouter un artisan
+        </a>
+    </div>
+    {% endif %}
+
+    {% if artisans is empty %}
+        <div class="card empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>Aucun artisan trouvé</h3>
+            <p>Commencez par ajouter votre premier artisan</p>
+        </div>
+    {% else %}
+        <div class="grid">
+            {% for artisan in artisans %}
+                <div class="card artisan-card-premium">
+                    <div class="artisan-card-header">
+                        {% if artisan.photo %}
+                            <div class="artisan-avatar-wrapper">
+                                <img src="{{ artisan.photo }}" alt="{{ artisan.nom }}" class="artisan-avatar">
+                            </div>
+                        {% else %}
+                            <div class="artisan-avatar-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <h3 class="artisan-name">{{ artisan.nom }}</h3>
+                    
+                    {% if artisan.verified %}
+                        <div class="artisan-badge-container">
+                            <span class="badge badge-success">
+                                <i class="fas fa-check-circle"></i> Vérifié
+                            </span>
+                        </div>
+                    {% endif %}
+                    
+                    <p class="artisan-bio-preview">
+                        {{ artisan.bio|slice(0, 80) }}{% if artisan.bio|length > 80 %}...{% endif %}
+                    </p>
+                    
+                    {% if artisan.competences %}
+                        <div class="artisan-skills">
+                            {% for competence in artisan.competences %}
+                                <span class="skill-tag">
+                                    {{ competence }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="artisan-contact-info">
+                        <p><i class="fas fa-envelope"></i> {{ artisan.email }}</p>
+                        {% if artisan.telephone %}
+                            <p><i class="fas fa-phone"></i> {{ artisan.telephone }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="artisan-actions-container">
+                        <div class="artisan-main-actions">
+                             <a href="/artisan/{{ artisan.id }}" class="btn btn-secondary">
+                                <i class="fas fa-eye"></i> Voir le profil
+                            </a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_artisan_edit', {'id': artisan.id}) }}" class="btn btn-primary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <form method="post" action="{{ path('app_artisan_delete', {'id': artisan.id}) }}" 
+                                  class="artisan-delete-form js-confirm-delete"
+                                  data-title="Supprimer l'artisan ?"
+                                  data-text="Voulez-vous vraiment supprimer l'artisan '{{ artisan.nom }}' ? Cette action est définitive."
+                                  data-confirm-button="Oui, supprimer">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ artisan.id) }}">
+                                <button class="btn btn-danger">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="pagination-container">
+            {{ knp_pagination_render(artisans) }}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
